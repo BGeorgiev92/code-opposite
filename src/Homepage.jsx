@@ -1,68 +1,12 @@
 import { useEffect, useState } from 'react'
 import logo from '/logo-with-text.svg'
+import { translations } from './translations'
 
-const services = [
-  {
-    icon: '🌐',
-    title: 'Web Applications',
-    body: 'Fast, scalable web platforms and dashboards built with modern frameworks and a focus on performance.',
-  },
-  {
-    icon: '📱',
-    title: 'Mobile Apps',
-    body: 'Native and cross-platform iOS and Android apps designed around your users and your workflows.',
-  },
-  {
-    icon: '⚙️',
-    title: 'Backend & APIs',
-    body: 'Robust services, REST and GraphQL APIs, and event-driven systems engineered to handle real load.',
-  },
-  {
-    icon: '☁️',
-    title: 'Cloud & DevOps',
-    body: 'Infrastructure as code, CI/CD pipelines, and cloud architecture that scales cleanly and predictably.',
-  },
-  {
-    icon: '🤖',
-    title: 'AI & Data',
-    body: 'Custom AI features, data pipelines, and analytics that turn your data into a competitive advantage.',
-  },
-  {
-    icon: '🔗',
-    title: 'Integrations',
-    body: 'Connect the tools you already use — payments, CRMs, ERPs, and third-party services — seamlessly.',
-  },
-]
-
-const steps = [
-  {
-    number: '01',
-    title: 'Discover',
-    body: 'We start by understanding your business, your users, and the exact criteria your software must meet.',
-  },
-  {
-    number: '02',
-    title: 'Design',
-    body: 'We shape an architecture and experience tailored to those criteria — no off-the-shelf compromises.',
-  },
-  {
-    number: '03',
-    title: 'Build',
-    body: 'We develop in tight iterations, shipping working software you can review and steer at every step.',
-  },
-  {
-    number: '04',
-    title: 'Deliver & Support',
-    body: 'We launch, monitor, and keep improving — your system grows with your business, not against it.',
-  },
-]
-
-const stats = [
-  { value: '100%', label: 'Custom-built solutions' },
-  { value: '6+', label: 'Software domains covered' },
-  { value: '24/7', label: 'Monitoring & support' },
-  { value: '∞', label: 'Ways to tailor your system' },
-]
+// Language-independent bits, zipped with the translated arrays by index.
+const serviceIcons = ['🌐', '📱', '⚙️', '☁️', '🤖', '🔗']
+const stepNumbers = ['01', '02', '03', '04']
+const statValues = ['100%', '6+', '24/7', '∞']
+const companyHrefs = ['#about', '#process', '#services', '#contact']
 
 const techStack = [
   'React', 'Node.js', 'TypeScript', 'Python', 'Go', 'PostgreSQL',
@@ -89,9 +33,33 @@ function useScrollReveal() {
   }, [])
 }
 
+// Persisted language state. English is the default.
+function useLanguage() {
+  const [lang, setLang] = useState(() => {
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('lang')
+      if (saved === 'en' || saved === 'bg') return saved
+    }
+    return 'en'
+  })
+
+  useEffect(() => {
+    document.documentElement.lang = lang
+    try {
+      localStorage.setItem('lang', lang)
+    } catch {
+      /* ignore storage errors */
+    }
+  }, [lang])
+
+  return [lang, setLang]
+}
+
 export default function Homepage() {
   useScrollReveal()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [lang, setLang] = useLanguage()
+  const t = translations[lang]
   const closeMenu = () => setMenuOpen(false)
 
   return (
@@ -111,31 +79,26 @@ export default function Homepage() {
           <span></span>
         </button>
         <nav className={`nav-links ${menuOpen ? 'is-open' : ''}`}>
-          <a href="#services" onClick={closeMenu}>Services</a>
-          <a href="#process" onClick={closeMenu}>Process</a>
-          <a href="#about" onClick={closeMenu}>About</a>
-          <a href="#contact" onClick={closeMenu}>Contact</a>
+          <a href="#services" onClick={closeMenu}>{t.nav.services}</a>
+          <a href="#process" onClick={closeMenu}>{t.nav.process}</a>
+          <a href="#about" onClick={closeMenu}>{t.nav.about}</a>
+          <a href="#contact" onClick={closeMenu}>{t.nav.contact}</a>
         </nav>
       </header>
 
       <main id="top">
         <section className="hero">
           <div className="hero-copy">
-            <span className="eyebrow" data-reveal>Custom software, built your way</span>
+            <span className="eyebrow" data-reveal>{t.hero.eyebrow}</span>
             <h1 data-reveal>
-              We build <span className="grad">every kind of software</span> — by
-              your criteria.
+              {t.hero.h1pre}
+              <span className="grad">{t.hero.h1mid}</span>
+              {t.hero.h1post}
             </h1>
-            <p data-reveal>
-              CodeOpposite designs and engineers software systems of all types —
-              web, mobile, backend, cloud, and AI — each one tailored to the
-              exact requirements, constraints, and goals of your business. No
-              templates, no compromises. Just the right system, built the
-              opposite way: around you.
-            </p>
+            <p data-reveal>{t.hero.p}</p>
             <div className="cta" data-reveal>
-              <a className="btn primary" href="#contact">Start your project</a>
-              <a className="btn ghost" href="#services">Explore services</a>
+              <a className="btn primary" href="#contact">{t.hero.ctaPrimary}</a>
+              <a className="btn ghost" href="#services">{t.hero.ctaSecondary}</a>
             </div>
           </div>
           <div className="hero-art" data-reveal>
@@ -158,21 +121,18 @@ export default function Homepage() {
 
         <section id="services" className="section">
           <div className="section-head" data-reveal>
-            <h2>Software systems of every type</h2>
-            <p>
-              Whatever you need built, we cover it end to end — and we tailor
-              each system to your custom criteria.
-            </p>
+            <h2>{t.servicesSection.heading}</h2>
+            <p>{t.servicesSection.sub}</p>
           </div>
           <div className="services">
-            {services.map((s, i) => (
+            {t.services.map((s, i) => (
               <article
                 className="card"
-                key={s.title}
+                key={i}
                 data-reveal
                 style={{ transitionDelay: `${i * 80}ms` }}
               >
-                <div className="card-icon">{s.icon}</div>
+                <div className="card-icon">{serviceIcons[i]}</div>
                 <h3>{s.title}</h3>
                 <p>{s.body}</p>
               </article>
@@ -182,21 +142,18 @@ export default function Homepage() {
 
         <section id="process" className="section process">
           <div className="section-head" data-reveal>
-            <h2>How we build by your criteria</h2>
-            <p>
-              A clear, collaborative process that keeps your requirements at the
-              center from first call to final delivery.
-            </p>
+            <h2>{t.processSection.heading}</h2>
+            <p>{t.processSection.sub}</p>
           </div>
           <div className="steps">
-            {steps.map((step, i) => (
+            {t.steps.map((step, i) => (
               <article
                 className="step"
-                key={step.number}
+                key={i}
                 data-reveal
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
-                <span className="step-number">{step.number}</span>
+                <span className="step-number">{stepNumbers[i]}</span>
                 <h3>{step.title}</h3>
                 <p>{step.body}</p>
               </article>
@@ -205,34 +162,30 @@ export default function Homepage() {
         </section>
 
         <section className="stats" data-reveal>
-          {stats.map((stat) => (
-            <div className="stat" key={stat.label}>
-              <span className="stat-value">{stat.value}</span>
-              <span className="stat-label">{stat.label}</span>
+          {t.stats.map((label, i) => (
+            <div className="stat" key={i}>
+              <span className="stat-value">{statValues[i]}</span>
+              <span className="stat-label">{label}</span>
             </div>
           ))}
         </section>
 
         <section id="about" className="section about">
           <div className="section-head" data-reveal>
-            <h2>Why CodeOpposite</h2>
+            <h2>{t.aboutSection.heading}</h2>
           </div>
           <div className="about-grid">
             <p data-reveal>
-              Most software is shaped by the tools that build it. We flip that
-              around. We start from <strong>your</strong> criteria — your users,
-              your constraints, your goals — and engineer the system that fits
-              them precisely. That is what building "the opposite way" means.
+              {t.about.p1pre}
+              <strong>{t.about.p1strong}</strong>
+              {t.about.p1post}
             </p>
             <p data-reveal style={{ transitionDelay: '120ms' }}>
-              From a single internal tool to a full product platform, our team
-              brings deep engineering across web, mobile, cloud, and AI. You get
-              software that is reliable, maintainable, and genuinely yours —
-              ready to grow as your business does.
+              {t.about.p2}
             </p>
           </div>
           <div className="cta center" data-reveal>
-            <a className="btn primary" href="#contact">Let's build it together</a>
+            <a className="btn primary" href="#contact">{t.about.cta}</a>
           </div>
         </section>
       </main>
@@ -241,39 +194,49 @@ export default function Homepage() {
         <div className="footer-grid">
           <div className="footer-brand">
             <img src={logo} alt="Code Opposite logo" className="footer-logo" />
-            <p>
-              Custom software systems of every type — engineered around your
-              exact criteria.
-            </p>
+            <p>{t.footer.brandText}</p>
           </div>
 
           <div className="footer-col">
-            <h4>Services</h4>
-            <a href="#services">Web Applications</a>
-            <a href="#services">Mobile Apps</a>
-            <a href="#services">Backend &amp; APIs</a>
-            <a href="#services">Cloud &amp; DevOps</a>
-            <a href="#services">AI &amp; Data</a>
+            <h4>{t.footer.servicesTitle}</h4>
+            {t.footer.services.map((label, i) => (
+              <a href="#services" key={i}>{label}</a>
+            ))}
           </div>
 
           <div className="footer-col">
-            <h4>Company</h4>
-            <a href="#about">About</a>
-            <a href="#process">Process</a>
-            <a href="#services">Services</a>
-            <a href="#contact">Contact</a>
+            <h4>{t.footer.companyTitle}</h4>
+            {t.footer.company.map((label, i) => (
+              <a href={companyHrefs[i]} key={i}>{label}</a>
+            ))}
           </div>
 
           <div className="footer-col">
-            <h4>Get in touch</h4>
+            <h4>{t.footer.contactTitle}</h4>
             <a href="mailto:info@codeopposite.com">info@codeopposite.com</a>
             <a href="tel:+359885727910">+359 885 727 910</a>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>© 2026 CodeOpposite. All rights reserved.</p>
-          <p>Built the opposite way — around you.</p>
+          <p>{t.footer.copyright}</p>
+          <div className="lang-switch" role="group" aria-label="Language">
+            <button
+              className={lang === 'en' ? 'active' : ''}
+              onClick={() => setLang('en')}
+              aria-pressed={lang === 'en'}
+            >
+              EN
+            </button>
+            <button
+              className={lang === 'bg' ? 'active' : ''}
+              onClick={() => setLang('bg')}
+              aria-pressed={lang === 'bg'}
+            >
+              BG
+            </button>
+          </div>
+          <p>{t.footer.tagline}</p>
         </div>
       </footer>
     </div>

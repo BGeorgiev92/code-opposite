@@ -446,14 +446,42 @@ body {
 
 .footer-bottom {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 16px;
   margin-top: 48px;
   padding-top: 24px;
   border-top: 1px solid var(--border);
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+/* ---------- Language switch ---------- */
+.lang-switch {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.lang-switch button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  color: var(--brand-primary);
+  transition: background 0.2s, color 0.2s;
+}
+
+.lang-switch button.active {
+  background: var(--brand-gradient);
+  color: #fff;
 }
 
 /* ---------- Scroll reveal ---------- */
@@ -567,8 +595,18 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 28px;
   }
+  /* center the whole footer on mobile */
+  .footer {
+    text-align: center;
+  }
+  .footer-logo,
+  .footer-brand p {
+    margin-left: auto;
+    margin-right: auto;
+  }
   .footer-bottom {
     flex-direction: column;
+    align-items: center;
   }
 }
 
