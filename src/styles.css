@@ -36,17 +36,22 @@ body {
   padding: 0 24px;
 }
 
-/* ---------- Nav ---------- */
+/* ---------- Nav (full-width sticky bar) ---------- */
 .nav {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  z-index: 50;
+}
+
+.nav-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 0;
-  position: sticky;
-  top: 0;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  z-index: 50;
+  padding: 16px 40px;
 }
 
 .logo {
@@ -60,12 +65,21 @@ body {
   display: block;
 }
 
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
 .nav-links a {
   color: var(--muted);
   text-decoration: none;
   margin-left: 28px;
   font-weight: 500;
   transition: color 0.2s;
+}
+
+.nav-links .lang-switch {
+  margin-left: 28px;
 }
 
 .nav-links a:hover {
@@ -484,6 +498,99 @@ body {
   color: #fff;
 }
 
+/* ---------- Contact form ---------- */
+.contact-form {
+  max-width: 640px;
+  margin: 0 auto;
+  display: grid;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-align: left;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 13px 16px;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: var(--muted);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--brand-secondary);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.contact-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.contact-form .btn {
+  justify-self: start;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.contact-form .btn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+  transform: none;
+}
+
+/* honeypot — hidden from real users */
+.contact-form .hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.form-msg {
+  margin-top: 2px;
+  padding: 13px 16px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.form-msg.success {
+  background: rgba(34, 197, 94, 0.12);
+  color: #15803d;
+}
+
+.form-msg.error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+}
+
+/* offset anchored sections so the sticky nav doesn't cover their headings */
+:target {
+  scroll-margin-top: 90px;
+}
+
 /* ---------- Scroll reveal ---------- */
 [data-reveal] {
   opacity: 0;
@@ -545,6 +652,12 @@ body {
     font-size: 1.1rem;
     border-bottom: 1px solid var(--border);
   }
+
+  /* switcher sits inside the drawer on mobile */
+  .nav-links .lang-switch {
+    margin-left: 0;
+    margin-top: 20px;
+  }
 }
 
 @media (max-width: 900px) {
@@ -574,6 +687,9 @@ body {
 @media (max-width: 760px) {
   .page {
     padding: 0 18px;
+  }
+  .nav-inner {
+    padding: 12px 18px;
   }
   .section {
     padding: 60px 0;

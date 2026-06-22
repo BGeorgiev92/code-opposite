@@ -105,11 +105,11 @@
     <rect x="62" y="18" width="46" height="10" rx="5" fill="#531D84"/>
   </g>
 
-  <!-- floating code badge -->
-  <g filter="url(#shadowSm)" transform="translate(70 360)">
-    <rect x="0" y="0" width="150" height="56" rx="14" fill="#1a1320"/>
-    <text x="18" y="26" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#c4b5fd">&lt;/&gt; build()</text>
-    <rect x="18" y="36" width="80" height="6" rx="3" fill="#9333EA"/>
-    <rect x="104" y="36" width="28" height="6" rx="3" fill="#ffffff" fill-opacity="0.3"/>
+  <!-- floating code badge — shadow only on the rect so the text stays crisp vector -->
+  <g transform="translate(70 360)">
+    <rect x="0" y="0" width="150" height="56" rx="14" fill="#1a1320" filter="url(#shadowSm)"/>
+    <text x="18" y="27" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" fill="#c4b5fd">&lt;/&gt; build()</text>
+    <rect x="18" y="37" width="80" height="6" rx="3" fill="#9333EA"/>
+    <rect x="104" y="37" width="28" height="6" rx="3" fill="#ffffff" fill-opacity="0.3"/>
   </g>
 </svg>
