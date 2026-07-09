@@ -4,6 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Set theme before render to avoid a flash. Default: dark. -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme')
+          document.documentElement.dataset.theme =
+            saved === 'light' || saved === 'dark' ? saved : 'dark'
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark'
+        }
+      })()
+    </script>
+
     <!-- Primary meta -->
     <title>CodeOpposite — Custom Software Development</title>
     <meta

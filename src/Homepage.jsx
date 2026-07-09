@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
-import logo from '/logo-with-text.svg'
 import { translations } from './translations'
+
+const LOGO_LIGHT = '/logo-with-text.svg'
+const LOGO_DARK = '/logo-with-text-dark.svg'
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mykqywov'
 
@@ -34,6 +36,28 @@ function useScrollReveal() {
     els.forEach((el) => observer.observe(el))
     return () => observer.disconnect()
   }, [])
+}
+
+// Persisted theme state. Dark is the default.
+function useTheme() {
+  const [theme, setTheme] = useState(() => {
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('theme')
+      if (saved === 'light' || saved === 'dark') return saved
+    }
+    return 'dark'
+  })
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    try {
+      localStorage.setItem('theme', theme)
+    } catch {
+      /* ignore storage errors */
+    }
+  }, [theme])
+
+  return [theme, setTheme]
 }
 
 // Persisted language state. English is the default.
@@ -147,7 +171,9 @@ export default function Homepage() {
   useScrollReveal()
   const [menuOpen, setMenuOpen] = useState(false)
   const [lang, setLang] = useLanguage()
+  const [theme, setTheme] = useTheme()
   const t = translations[lang]
+  const logo = theme === 'dark' ? LOGO_DARK : LOGO_LIGHT
   const closeMenu = () => setMenuOpen(false)
 
   return (
@@ -172,6 +198,23 @@ export default function Homepage() {
             <a href="#process" onClick={closeMenu}>{t.nav.process}</a>
             <a href="#about" onClick={closeMenu}>{t.nav.about}</a>
             <a href="#contact" onClick={closeMenu}>{t.nav.contact}</a>
+            <button
+              className="theme-toggle"
+              onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+            >
+              {theme === 'dark' ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              )}
+            </button>
             <div className="lang-switch" role="group" aria-label="Language">
               <button
                 className={lang === 'en' ? 'active' : ''}
