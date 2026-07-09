@@ -4,7 +4,7 @@ import { translations } from './translations'
 const LOGO_LIGHT = '/logo-with-text.svg'
 const LOGO_DARK = '/logo-with-text-dark.svg'
 
-const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mykqywov'
+const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT
 
 // Language-independent bits, zipped with the translated arrays by index.
 const serviceIcons = ['🌐', '📱', '⚙️', '☁️', '🤖', '🔗']

@@ -27,10 +27,11 @@ It presents the company's services, process, and contact form, with a bilingual 
 
 ## Getting started
 
-Install dependencies and start the local dev server:
+Install dependencies, create your local env file, and start the dev server:
 
 ```bash
 npm install
+cp .env.example .env    # then set VITE_FORMSPREE_ENDPOINT in .env
 npm run dev
 ```
 
@@ -71,9 +72,22 @@ code-opposite/
 
 ---
 
+## Environment variables
+
+The contact form's endpoint is read from an environment variable so it is **not committed to the repository**:
+
+| Variable                  | Description                                  |
+| ------------------------- | -------------------------------------------- |
+| `VITE_FORMSPREE_ENDPOINT` | Your [Formspree](https://formspree.io) form URL, e.g. `https://formspree.io/f/xxxxxxxx` |
+
+- **Locally:** put it in a `.env` file (copy `.env.example` → `.env`). `.env` is gitignored.
+- **On Render:** add it under **Environment → Environment Variables** in the service settings.
+
+> Note: Vite inlines `VITE_`-prefixed variables into the built JS at build time. This keeps the value out of the source repo, but it is **still visible in the deployed site's network requests** — that is unavoidable for a static frontend. Formspree endpoints are designed to be public and protected by spam filtering, so this is safe.
+
 ## Configuration
 
-- **Contact form** — the Formspree endpoint is the `FORMSPREE_ENDPOINT` constant at the top of `src/Homepage.jsx`. Replace it with your own form ID if needed. Submissions are emailed to the address configured in your Formspree form.
+- **Contact form** — the endpoint comes from `VITE_FORMSPREE_ENDPOINT` (see above). Submissions are emailed to the address configured in your Formspree form.
 - **Text / translations** — edit `src/translations.js`. English is under `en`, Bulgarian under `bg`.
 - **Colors / theme** — brand colors and the light/dark palettes are CSS variables at the top of `src/styles.css` (`--brand-primary`, `--brand-secondary`, and the `:root` / `:root[data-theme="dark"]` blocks).
 
@@ -98,3 +112,5 @@ The site is configured to deploy as a **Static Site** on [Render](https://render
 - **Publish directory:** `dist`
 
 Push to the connected branch and Render rebuilds and redeploys automatically. On Render, either create a **Blueprint** (it reads `render.yaml`) or a **Static Site** with the build command and publish directory above.
+
+**Important:** add the `VITE_FORMSPREE_ENDPOINT` environment variable in the Render service settings, otherwise the contact form will have no endpoint after deploy.
